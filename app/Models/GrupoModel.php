@@ -6,6 +6,12 @@ use CodeIgniter\Model;
 
 class GrupoModel extends Model
 {
+    public function __construct()
+    {
+        // Este modelo aún no usa base de datos, por eso no llamamos al constructor
+        // del padre, que intentaría conectar a la base de datos.
+    }
+
     public function obtenerGrupos()
     {
         return [
