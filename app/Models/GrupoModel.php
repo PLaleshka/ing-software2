@@ -16,15 +16,33 @@ namespace App\Models;
 class GrupoModel
 {
     private const GRUPOS = [
-        ['id' => 1, 'nombre' => 'Grupo A', 'materia' => 'Inteligencia Artificial'],
-        ['id' => 2, 'nombre' => 'Grupo B', 'materia' => 'Desarrollo Web'],
-        ['id' => 3, 'nombre' => 'Grupo C', 'materia' => 'Ciberseguridad'],
+        [
+            'id'          => 1,
+            'nombre'      => 'Grupo Alpha',
+            'materia'     => 'Inteligencia Artificial',
+            'cupos'       => 2,
+            'integrantes' => ['Ana Torres', 'Luis Gómez', 'Carlos Díaz'],
+        ],
+        [
+            'id'          => 2,
+            'nombre'      => 'Grupo Beta',
+            'materia'     => 'Desarrollo Web',
+            'cupos'       => 0,
+            'integrantes' => ['María Pérez', 'Pedro Ruiz', 'Sofía Herrera', 'Diego Lara'],
+        ],
+        [
+            'id'          => 3,
+            'nombre'      => 'Grupo Gamma',
+            'materia'     => 'Ciberseguridad',
+            'cupos'       => 3,
+            'integrantes' => ['Lucía Vera', 'Mateo Salinas'],
+        ],
     ];
 
     /**
      * Devuelve la lista completa de grupos.
      *
-     * @return list<array{id: int, nombre: string, materia: string}>
+     * @return list<array{id: int, nombre: string, materia: string, cupos: int, integrantes: list<string>}>
      */
     public function obtenerGrupos(): array
     {
@@ -34,7 +52,7 @@ class GrupoModel
     /**
      * Devuelve un grupo por su id, o null si no existe.
      *
-     * @return array{id: int, nombre: string, materia: string}|null
+     * @return array{id: int, nombre: string, materia: string, cupos: int, integrantes: list<string>}|null
      */
     public function obtenerGrupo(int $id): ?array
     {
