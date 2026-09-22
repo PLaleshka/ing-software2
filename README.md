@@ -1,40 +1,45 @@
 # Grupos de trabajo académicos
 
 Aplicación web de ejemplo construida con el framework **CodeIgniter 4** (PHP).
-Es un proyecto básico de instalación: muestra una lista de grupos de trabajo
-académicos para comprobar que el framework quedó correctamente instalado y
-funcionando.
+Muestra los conceptos básicos del framework mediante el patrón **MVC**:
+enrutamiento, controladores, modelos y vistas con layout.
 
 ![Estado](https://img.shields.io/badge/CodeIgniter-4.7-red) ![PHP](https://img.shields.io/badge/PHP-%3E%3D8.2-blue)
 
 ## ¿Qué hace?
 
-Al visitar `/` o `/grupos` se muestra una página con una lista de grupos de
-trabajo. Por ahora **los datos son fijos** (no se conecta a una base de datos),
-justo para mantener el ejemplo simple e independiente.
+Al visitar `/` o `/grupos` se muestra la lista de grupos de trabajo académicos y,
+desde cada uno, se accede a una página de **detalle** (`/grupos/1`). La aplicación
+**no usa base de datos**: los datos viven en memoria (un arreglo en el modelo), por
+lo que nada se guarda de forma persistente y al reiniciar el servidor vuelven al
+estado inicial.
 
 ### Flujo de la aplicación
 
 ```
 petición HTTP  ──►  Router (Routes.php)  ──►  Controlador (Grupos)
-                                               │
-                                               ▼
-                                             Modelo (GrupoModel)  ──►  datos
-                                               │
-                                               ▼
-                                          Vista (Views/grupos)  ──►  HTML
+                                                │
+                                                ▼
+                                              Modelo (GrupoModel)  ──►  datos en memoria
+                                                │
+                                                ▼
+                                           Vista (Views/grupos)  ──►  HTML
 ```
 
-1. **Ruta** (`app/Config/Routes.php`): asocia la URL `/grupos` con el controlador.
-2. **Controlador** (`app/Controllers/Grupos.php`): pide los datos al modelo.
-3. **Modelo** (`app/Models/GrupoModel.php`): devuelve la lista de grupos (datos fijos).
-4. **Vista** (`app/Views/grupos/index.php`): pinta el HTML con los grupos.
+1. **Ruta** (`app/Config/Routes.php`): asocia `/grupos` con el controlador. Muestra
+   rutas con nombre (`'as' => 'grupos'`) y con parámetro (`grupos/(:num)`).
+2. **Controlador** (`app/Controllers/Grupos.php`): recibe la petición, pide los
+   datos al modelo y decide qué vista mostrar (`index` / `detalle`).
+3. **Modelo** (`app/Models/GrupoModel.php`): única fuente de datos. Los devuelve
+   desde memoria y no depende de ninguna base de datos.
+4. **Vista** (`app/Views/`): `layouts/principal.php` define el layout común y las
+   vistas de grupo lo heredan con `extend()`. Genera enlaces con `route_to()` y
+   escapa el contenido con `esc()`.
 
 ## Requisitos
 
 - PHP 8.2 o superior, con las extensiones `intl` y `mbstring`
 - [Composer](https://getcomposer.org/)
-- Para conectar a base de datos en el futuro: PHP con la extensión `mysqli`
 
 ## Instalación
 
@@ -52,26 +57,31 @@ php spark serve
 
 Abrí en el navegador: <http://localhost:8080/grupos>
 
-> Nota: este proyecto funciona **sin base de datos**; los grupos son datos fijos
-> en el modelo. Para usar una BD real, activá `mysqli` en PHP, configurá `.env`
-> y adaptá `GrupoModel` al modelo de CodeIgniter con su tabla.
+> Nota: este proyecto funciona **sin base de datos**: los datos están en memoria
+> dentro del modelo y no se persiste nada. Es una elección deliberada para que el
+> ejemplo sea autónomo; el MVC del framework queda igualmente demostrado.
 
-## Estructura clave
+## Estructura de la aplicación
 
 ```
 app/
-├── Config/Routes.php        → definición de rutas
-├── Controllers/Grupos.php   → controlador (lógica de la petición)
-├── Models/GrupoModel.php    → modelo (origen de datos)
-└── Views/grupos/index.php   → vista (HTML y CSS)
+├── Config/Routes.php             → definición de rutas (con nombre y parámetro)
+├── Controllers/Grupos.php        → controlador: lista y detalle de grupos
+├── Models/GrupoModel.php         → modelo: devuelve los datos (en memoria)
+└── Views/
+    ├── layouts/principal.php     → layout base (HTML + CSS) reutilizable
+    └── grupos/
+        ├── index.php             → vista: lista de grupos
+        └── detalle.php           → vista: ficha de un grupo
 ```
+
+> El resto de `app/`, `public/`, `writable/` y `spark` corresponde al esqueleto
+> del framework y es necesario para que CodeIgniter funcione.
 
 ## Seguridad
 
-- `.env` está en `.gitignore`: las credenciales nunca se suben al repositorio.
-- Scripts y artefactos internos del framework (`builds`) se mantienen en `tools/`
-  por referencia, sin formar parte de la aplicación.
-- Con un método por defecto, `public/` es la única carpeta expuesta al servidor web.
+- `.env` está en `.gitignore`: si se crea, las credenciales nunca se suben al repositorio.
+- `public/` es la única carpeta expuesta al servidor web.
 
 ## Licencia
 
